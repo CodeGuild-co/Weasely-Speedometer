@@ -1,2 +1,4 @@
-##contributors
+##Contributors
+-Finn Welsh
 -Harvey Jackson
+
