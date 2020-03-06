@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Weasely Speedometer</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      @font-face {
+    font-family: 'harry_p';
+    src: url('/static/harryp__-webfont.woff2') format('woff2'),
+         url('/static/harryp__-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+      #submit-btn {
+            width:200px;
+            height:50px;
+            position:absolute;
+            bottom:100px;
+            left:50%;
+            margin-left:-100px;
+            background-color: #FF8F19;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 35px;
+            border-radius:12px;
+            font-family: 'harry_p';
+            transition-duration: 0.4s;
+      }
+      #submit-btn:hover {
+  background-color: white;
+  color: #FF8F19;
+}
+
+      #places {
+          width: 500px;
+          position: absolute;
+          top: 50px;
+          left: 50%;
+          margin-left: -250px;
+      }
+
+    </style>
+  </head>
+  <body>
+      <div id="map"></div>
+      <div id="places">
+          <input type="search" id="address-input" placeholder="Where are you searching for? (leave empty for current location)" />
+      </div>
+    <form id="latlng" method="post">
+        <button type="submit" id="submit-btn">
+            Weasely Speedo It
+        </button>
+        <input type="hidden" id="lat" name="lat">
+        <input type="hidden" id="lng" name="lng">
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/places.js@1.18.1"></script>
+    <script>
+      // Note: This example requires that you consent to location sharing when
+      // prompted by your browser. If you see the error "The Geolocation service
+      // failed.", it means you probably did not give permission for the browser to
+      // locate you.
+      var map, infoWindow;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 52, lng: 0},
+          zoom: 15
+        });
+        infoWindow = new google.maps.InfoWindow;
+
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+
+            };
+            document.getElementById('lat').value = pos.lat;
+            document.getElementById('lng').value = pos.lng;
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            infoWindow.open(map);
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+      }
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+        infoWindow.open(map);
+      }
+
+        var placesAutocomplete = places({
+            appId: 'plF0VXN1LN1S',
+            apiKey: 'ef1907523a62f9608f3fe3ad441eef65',
+            container: document.querySelector('#address-input'),
+            countries: ['GB']
+
+        });
+        placesAutocomplete.on('change', function(e) {
+            document.getElementById('lat').value = e.suggestion.latlng.lat;
+            document.getElementById('lng').value = e.suggestion.latlng.lng;
+            console.log(e.suggestion)
+        var spos = {
+          lat: e.suggestion.latlng.lat,
+          lng: e.suggestion.latlng.lng,
+
+        };
+        map.setCenter(spos);
+        });
+
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXkyEERE8f8SgkJ9dpVccobwjEkPOcq18&callback=initMap">
+    </script>
+  </body>
+</html>

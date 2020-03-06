@@ -1,0 +1,198 @@
+<html>
+  <head>
+    <title>Weasely Speedometer</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/static/jquery-gauge.css">
+    <style>
+              @font-face {
+    font-family: 'harry_p';
+    src: url('/static/harryp__-webfont.woff2') format('woff2'),
+         url('/static/harryp__-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'arimoregular';
+    src: url('/static/arimo-regular-webfont.woff2') format('woff2'),
+         url('/static/arimo-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+    h1{
+        font-family: 'harry_p';
+        font-size:100px;
+        margin-top:20px;
+        text-align:center;
+        font-weight: normal;
+    }
+    h2{
+        font-size:20px;
+        bottom: 100px;
+        font-family: 'arimoregular';
+        padding-left:50px;
+
+    }
+      #go-back {
+            width:200px;
+            position:fixed;
+            bottom:100px;
+            left:50%;
+            padding: 5px 0px;
+            margin-left:-100px;
+            background-color: #FF8F19;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 40px;
+            border-radius:12px;
+            font-family: 'harry_p';
+            transition-duration: 0.4s;
+      }
+      #go-back:hover {
+  background-color: white;
+  color: #FF8F19;
+}
+		.demo2 {
+		position: relative;
+		width: 40vw;
+		height: 40vw;
+		box-sizing: border-box;
+		left:50%;
+        margin-left: -20vw;
+		}
+		#listofoffences {
+		    font-family:'arimoregular';
+		}
+body{
+    padding-bottom:150px;
+}
+.stats{
+    vertical-align: top;
+}
+        .stats, .KeyOfOffences {
+            display: inline-block;
+            width: 49%;
+        }
+    </style>
+  </head>
+  <body>
+
+
+    <h1>Weasely Speedometer</h1>
+    <div class="gauge2 demo2"></div>
+    <div class="stats">
+        <h2>Average crimes per month: {{ncrimes}}</h2>
+        <h2>Most common crime: {{mostCrime}}</h2>
+        {% if highRisk %}
+            <body style="background-color:#e01010;">
+            <h2>This is a high risk area</h2>
+        {% else %}
+            <body style="background-color:#39e02d;">
+            <h2>This is a low risk area</h2>
+        {%endif%}
+        <h2>Population: {{population}}</h2>
+    </div>
+        <div class="KeyOfOffences">
+		    <h2>List of Offences</h2>
+	        <dl id='listofoffences'>
+	        <dt>AS</dt>
+		    <dd>
+			    Anti-Social Behaviour
+		    </dd>
+		    <dt>T</dt>
+		    <dd>
+		    	Theft
+    		</dd>
+	    	<dt>B</dt>
+		    <dd>
+			    Burgulary
+    		</dd>
+	    	<dt>CDA</dt>
+		    <dd>
+			    Criminal Damage & Arson
+    		</dd>
+	    	<dt>D</dt>
+		    <dd>
+			    Drugs
+    		</dd>
+    		<dt>POW</dt>
+    		<dd>
+    			Possesion Of Weapons
+    		</dd>
+    		<dt>PO</dt>
+	    	<dd>
+	    		Public Order
+	    	</dd>
+	    	<dt>R</dt>
+    		<dd>
+    			Robbery
+    		</dd>
+    		<dt>S</dt>
+    		<dd>
+	       		Shoplifting
+	    	</dd>
+	    	<dt>VC</dt>
+	    	<dd>
+	    		Vehicle Crime
+	    	</dd>
+	    	<dt>VSO</dt>
+	    	<dd>
+	    		Violent & Sexual Offences
+	    	</dd>
+	    	<dt>OC</dt>
+	    	<dd>
+	    		Other Crimes
+	    	</dd>
+    	</dl>
+    </div>
+	<a href="/" id = "go-back">
+      Go Back
+    </a>
+    <script src="/static/jquery.min.js"></script>
+	<script type="text/javascript" src="/static/jquery-gauge.min.js"></script>
+	<script>
+		// second example
+
+		var percentages = [{{asTotal}}, {{tTotal}}, {{bTotal}}, {{cdaTotal}}, {{dTotal}}, {{pwTotal}}, {{poTotal}}, {{rTotal}}, {{sTotal}}, {{vcTotal}}, {{vsoTotal}}, {{oTotal}}];
+		var names = ["AS", "T", "B", "CDA", "D", "PW", "PO", "R", "S", "VC", "VSO", "OC"];
+		var colours = ['#660000', '#CC3300', '#FFCC00', '#009900', '#003333', '#00cccc', '#006666', '#003399', '#0000FF', '#330066', '#666699', '#660066'];
+
+		var values = {};
+		var colors = {};
+		var cumulative = 0;
+		var degree = percentages[0] / 2;
+		var mostCommon = percentages[0];
+		for (var i=0; i<12; i++) {
+			values[cumulative] = names[i];
+			colors[cumulative] = colours[i];
+
+			if (percentages[i] > mostCommon) {
+			    mostCommon = percentages[i];
+			    degree = cumulative + percentages[i] / 2;
+			}
+
+			cumulative += percentages[i];
+		}
+
+		$('.gauge2').gauge({
+			values: values,
+			colors: colors,
+			angles: [
+				180,
+				360
+			],
+			lineWidth: 20,
+			arrowWidth: 20,
+			arrowColor: '#000000',
+			value: degree
+		});
+
+	</script>
+  </body>
+</html>
